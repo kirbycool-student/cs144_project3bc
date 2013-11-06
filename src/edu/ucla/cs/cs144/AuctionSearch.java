@@ -56,8 +56,8 @@ public class AuctionSearch implements IAuctionSearch {
 		
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
-		searcher = new IndexSearcher("null/index1");
-		parser = new QueryParser("Content", new StandardAnalyzer());
+		searcher = new IndexSearcher("../cs144_project3/null/index1");
+		parser = new QueryParser("content", new StandardAnalyzer());
 	
 		Query q = parser.parse(query);
 		Hits hits = searcher.search(q);
@@ -113,5 +113,6 @@ public class AuctionSearch implements IAuctionSearch {
 	public String echo(String message) {
 		return message;
 	}
+	
 
 }
