@@ -56,7 +56,7 @@ public class AuctionSearch implements IAuctionSearch {
 		
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
-		searcher = new IndexSearcher("null/index1");
+		searcher = new IndexSearcher(System.getenv("LUCENE_INDEX") + "/index1");
 		parser = new QueryParser("Content", new StandardAnalyzer());
 	
 		Query q = parser.parse(query);
@@ -82,9 +82,10 @@ public class AuctionSearch implements IAuctionSearch {
 	}
 
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 
-			int numResultsToSkip, int numResultsToReturn) {
-    searcher = new IndexSearcher("LUCENE_INDEX");
-    for(int i = 0; i < constraints.length; i++)
+			int numResultsToSkip, int numResultsToReturn) throws CorruptIndexException, IOException,
+      ParseException {
+    searcher = new IndexSearcher(System.getenv("$LUCENE_INDEX"));
+/*    for(int i = 0; i < constraints.length; i++)
     {
       if(constraints[i].fieldName.equals("ItemName"))
       {
@@ -101,6 +102,7 @@ public class AuctionSearch implements IAuctionSearch {
 
       }
     }
+*/
 		// TODO: Your code here!
 		return new SearchResult[0];
 	}
