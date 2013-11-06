@@ -44,8 +44,18 @@ public class AuctionSearch implements IAuctionSearch {
          *
          */
 	
+	private IndexSearcher searcher = null;
+	private QueryParser parser = null;
+	
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
 			int numResultsToReturn) {
+		
+		SearchResult[] results = {};
+		
+		String[] words = query.split(" ");
+		
+		
+		
 		// TODO: Your code here!
 		return new SearchResult[0];
 	}
