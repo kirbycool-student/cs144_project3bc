@@ -40,7 +40,8 @@ public interface IAuctionSearch {
 	 * SearchResult objects.
 	 */
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 
-			int numResultsToSkip, int numResultsToReturn);
+			int numResultsToSkip, int numResultsToReturn) throws CorruptIndexException, IOException,
+      ParseException;
 	
 	/**
 	 * Rebuilds an Item XML Element (and all of its sub-Elements), for the given

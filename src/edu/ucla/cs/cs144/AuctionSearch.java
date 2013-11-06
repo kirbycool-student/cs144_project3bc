@@ -113,6 +113,5 @@ public class AuctionSearch implements IAuctionSearch {
 	public String echo(String message) {
 		return message;
 	}
-	
 
 }
