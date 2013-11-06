@@ -1,5 +1,6 @@
 package edu.ucla.cs.cs144;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.sql.Statement;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hit;
@@ -15,6 +17,7 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.text.SimpleDateFormat;
@@ -47,17 +50,35 @@ public class AuctionSearch implements IAuctionSearch {
 	private IndexSearcher searcher = null;
 	private QueryParser parser = null;
 	
+	@SuppressWarnings({"deprecation", "unchecked"})
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
-			int numResultsToReturn) {
+			int numResultsToReturn) throws CorruptIndexException, IOException, ParseException {
 		
-		SearchResult[] results = {};
+		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
-		String[] words = query.split(" ");
+		searcher = new IndexSearcher("null/index1");
+		parser = new QueryParser("Content", new StandardAnalyzer());
+	
+		Query q = parser.parse(query);
+		Hits hits = searcher.search(q);
 		
+		System.out.println("total items: " + hits.length());
 		
+		for(int i = 0; i < hits.length(); i++) {
+		  Document doc = hits.doc(i);
+		  
+		  SearchResult s = new SearchResult();
+		  s.setItemId(doc.get("ItemId"));
+		  s.setName(doc.get("Name"));
+		  
+		  System.out.println(s.getItemId());
+		  
+		  results.add(s);
+		}
 		
-		// TODO: Your code here!
-		return new SearchResult[0];
+		SearchResult[] r = {};
+		r = results.toArray(r);
+		return r;
 	}
 
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 

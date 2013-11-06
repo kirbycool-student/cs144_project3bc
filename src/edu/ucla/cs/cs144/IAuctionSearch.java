@@ -1,5 +1,10 @@
 package edu.ucla.cs.cs144;
 
+import java.io.IOException;
+
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.queryParser.ParseException;
+
 import edu.ucla.cs.cs144.SearchConstraint;
 import edu.ucla.cs.cs144.SearchResult;
 
@@ -15,9 +20,12 @@ public interface IAuctionSearch {
 	 * @return An array of at most numResultsToReturn SearchResult objects 
 	 * representing the results of the query after skipping numResultsToSkip
 	 * SearchResult objects.
+	 * @throws IOException 
+	 * @throws CorruptIndexException 
+	 * @throws ParseException 
 	 */
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
-			int numResultsToReturn);
+			int numResultsToReturn) throws CorruptIndexException, IOException, ParseException;
 	
 	/**
 	 * Performs a search over the AND of all of the SearchConstraints. 
