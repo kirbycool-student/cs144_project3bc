@@ -102,6 +102,19 @@ public class AuctionSearch implements IAuctionSearch {
 		return new SearchResult[0];
 	}
 
+	public static String formatDate(String indate) {
+		Date out = null;
+		SimpleDateFormat outformat = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+		SimpleDateFormat informat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			out = informat.parse(indate);
+		} catch (java.text.ParseException e) {
+			System.err.println("bad date format");
+			return indate;
+		}
+		return outformat.format(out);
+	}
+    
 	public String getXMLDataForItemId(String itemId) throws SQLException {
 		// TODO: Your code here!
 		StringBuilder out = new StringBuilder();
@@ -145,8 +158,8 @@ public class AuctionSearch implements IAuctionSearch {
    	    out.append("  </Bids>\n");
 	    out.append("  <Location>" + rs.getString("Location") + "<Location/>\n");	
 		out.append("  <Country>" + rs.getString("Country") + "<Country/>\n");   
-		out.append("  <Started>" + rs.getString("Started") + "<Started/>\n"); 
-		out.append("  <Ends>" + rs.getString("Ends") + "<Ends/>\n"); 	
+		out.append("  <Started>" + formatDate( rs.getString("Started") ) + "<Started/>\n"); 
+		out.append("  <Ends>" + formatDate( rs.getString("Ends") ) + "<Ends/>\n"); 	
 		out.append("  <Seller UserID=\"" + rs.getString("User.UserId") + "\" Rating=\"" + rs.getString("Rating") + "\">\n");
 		out.append("  <Description>" + rs.getString("Description") + "</Description>\n");
 		out.append("</Item>\n");
