@@ -208,6 +208,16 @@ public class AuctionSearch implements IAuctionSearch {
 		}
 		return outformat.format(out);
 	}
+	
+	public static String escapeXML( String s ) {
+		s = s.replace("&", "&amp;");
+		s = s.replace("\"", "&quot;");
+		s = s.replace("\'", "&apos;");
+		s = s.replace("<", "&lt;");
+		s = s.replace(">", "&gt;");
+		
+		return s;
+	}
     
 	public String getXMLDataForItemId(String itemId) throws SQLException {
 		// TODO: Your code here!
@@ -230,32 +240,32 @@ public class AuctionSearch implements IAuctionSearch {
         }
         
         out.append("<Item ItemId=\"" + rs.getString("ItemId") + "\">\n");
-        out.append("  <Name>" + rs.getString("Name") + "</Name>\n");
+        out.append("  <Name>" + escapeXML(rs.getString("Name")) + "</Name>\n");
         while( catrs.next() ) {
-        	out.append("    <Category>" + catrs.getString("Category") + "</Category>\n");
+        	out.append("    <Category>" + escapeXML(catrs.getString("Category")) + "</Category>\n");
         }
-        out.append("  <Currently>" + rs.getString("Currently") + "</Currently>\n");
+        out.append("  <Currently>$" + rs.getString("Currently") + "</Currently>\n");
 	    out.append("  <Buy_Price>$" + rs.getString("BuyPrice") + "</Buy_Price>\n");
 	    out.append("  <First_Bid>$" + rs.getString("FirstBid") + "</First_Bid>\n");
    	    out.append("  <Number_of_Bids>" + rs.getString("NumberOfBids") + "</Number_of_Bids>\n");
    	    out.append("  <Bids>\n");
    	    while( bidrs.next() ) {
-   	    	out.append("  <Bid>\n");
-   	        out.append("    <Bidder UserID=\"" + bidrs.getString("User.UserId") + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
-   	        out.append("      <Location>" + bidrs.getString("Location") + "</Location>\n" );
-   	        out.append("      <Country>" + bidrs.getString("Country") + "</Country>\n" );
-   	        out.append("    </Bidder>\n");
-   	        out.append("    <Time>" + formatDate( bidrs.getString("Time") )+ "</Time>\n");
-   	        out.append("    <Amount>$" + bidrs.getString("Amount") + "</Amount>\n");
-   	        out.append("  </Bid>\n");
+   	    	out.append("    <Bid>\n");
+   	        out.append("      <Bidder UserID=\"" + escapeXML(bidrs.getString("User.UserId")) + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
+   	        out.append("        <Location>" + escapeXML(bidrs.getString("Location")) + "</Location>\n" );
+   	        out.append("        <Country>" + escapeXML(bidrs.getString("Country")) + "</Country>\n" );
+   	        out.append("      </Bidder>\n");
+   	        out.append("      <Time>" + formatXMLDate( bidrs.getString("Time") )+ "</Time>\n");
+   	        out.append("      <Amount>$" + bidrs.getString("Amount") + "</Amount>\n");
+   	        out.append("    </Bid>\n");
    	    }
    	    out.append("  </Bids>\n");
-	    out.append("  <Location>" + rs.getString("Location") + "<Location/>\n");	
-		out.append("  <Country>" + rs.getString("Country") + "<Country/>\n");   
-		out.append("  <Started>" + formatDate( rs.getString("Started") ) + "<Started/>\n"); 
-		out.append("  <Ends>" + formatDate( rs.getString("Ends") ) + "<Ends/>\n"); 	
-		out.append("  <Seller UserID=\"" + rs.getString("User.UserId") + "\" Rating=\"" + rs.getString("Rating") + "\">\n");
-		out.append("  <Description>" + rs.getString("Description") + "</Description>\n");
+	    out.append("  <Location>" + escapeXML(rs.getString("Location")) + "<Location/>\n");	
+		out.append("  <Country>" + escapeXML(rs.getString("Country")) + "<Country/>\n");   
+		out.append("  <Started>" + formatXMLDate( rs.getString("Started") ) + "<Started/>\n"); 
+		out.append("  <Ends>" + formatXMLDate( rs.getString("Ends") ) + "<Ends/>\n"); 	
+		out.append("  <Seller UserID=\"" + escapeXML(rs.getString("User.UserId")) + "\" Rating=\"" + rs.getString("Rating") + "\">\n");
+		out.append("  <Description>" + escapeXML(rs.getString("Description")) + "</Description>\n");
 		out.append("</Item>\n");
 		
 		return out.toString();
