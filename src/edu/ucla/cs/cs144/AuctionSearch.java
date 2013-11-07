@@ -104,50 +104,54 @@ public class AuctionSearch implements IAuctionSearch {
 
 	public String getXMLDataForItemId(String itemId) throws SQLException {
 		// TODO: Your code here!
-		String out = new String();
+		StringBuilder out = new StringBuilder();
 		
 		//get the item from db
 		
 		Connection con = DbManager.getConnection(true);
 		
 		Statement selectItem = con.createStatement();
+		Statement selectCat = con.createStatement();
+		Statement selectBid = con.createStatement();
         ResultSet rs = selectItem.executeQuery("SELECT * from Item join User on Item.Seller=User.UserId where ItemId=" + itemId);
-        ResultSet catrs = selectItem.executeQuery("SELECT Category from ItemCategory WHERE ItemId=" + itemId);
-        ResultSet bidrs = selectItem.executeQuery("SELECT * from Bid join User on Bid.Bidder=User.UserId where ItemId=" + itemId);
+        ResultSet catrs = selectCat.executeQuery("SELECT Category from ItemCategory WHERE ItemId=" + itemId);
+        ResultSet bidrs = selectBid.executeQuery("SELECT * from Bid join User on Bid.Bidder=User.UserId where ItemId=" + itemId);
         
         if( !rs.next() ) {
         	System.err.println("no results returned");
         	System.exit(-1);
         }
         
-        out.concat("<Item>\n");
-        out.concat("  <Name>" + rs.getString("Name") + "</Name>\n");
+        out.append("<Item>\n");
+        out.append("  <Name>" + rs.getString("Name") + "</Name>\n");
         while( catrs.next() ) {
-        	out.concat("    <Category>" + catrs.getString("Category") + "</Category>\n");
+        	out.append("    <Category>" + catrs.getString("Category") + "</Category>\n");
         }
-        out.concat("  <Currently>" + rs.getString("Currently") + "</Currently>\n");
-	    out.concat("  <Buy_Price>" + rs.getString("BuyPrice") + "</Buy_Price>\n");
-	    out.concat("  <First_Bid>" + rs.getString("FirstBid") + "</First_Bid>\n");
-   	    out.concat("  <Number_of_Bids>" + rs.getString("NumberOfBids") + "</Number_of_Bids>\n");
-   	    out.concat("  <Bids>\n");
+        out.append("  <Currently>" + rs.getString("Currently") + "</Currently>\n");
+	    out.append("  <Buy_Price>$" + rs.getString("BuyPrice") + "</Buy_Price>\n");
+	    out.append("  <First_Bid>$" + rs.getString("FirstBid") + "</First_Bid>\n");
+   	    out.append("  <Number_of_Bids>" + rs.getString("NumberOfBids") + "</Number_of_Bids>\n");
+   	    out.append("  <Bids>\n");
    	    while( bidrs.next() ) {
-   	    	out.concat("  <Bid>\n");
-   	        out.concat("    <Bidder UserID=\"" + bidrs.getString("User.UserId") + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
-   	        out.concat("      <Location>" + bidrs.getString("Location") + "</Location>\n" );
-   	        out.concat("      <Country>" + bidrs.getString("Country") + "</Country>\n" );
-   	        out.concat("    </Bidder>\n");
-   	        out.concat("    <Time>" + bidrs.getString("Time") + "</Time>\n");
-   	        out.concat("    <Amount>" + bidrs.getString("Amount") + "</Amount>\n");
-   	        out.concat("  </Bid>\n");
+   	    	out.append("  <Bid>\n");
+   	        out.append("    <Bidder UserID=\"" + bidrs.getString("User.UserId") + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
+   	        out.append("      <Location>" + bidrs.getString("Location") + "</Location>\n" );
+   	        out.append("      <Country>" + bidrs.getString("Country") + "</Country>\n" );
+   	        out.append("    </Bidder>\n");
+   	        out.append("    <Time>" + bidrs.getString("Time") + "</Time>\n");
+   	        out.append("    <Amount>$" + bidrs.getString("Amount") + "</Amount>\n");
+   	        out.append("  </Bid>\n");
    	    }
-	    out.concat("  <Location>" + rs.getString("Location") + "<Location/>\n");	
-		out.concat("  <Country>" + rs.getString("Country") + "<Country/>\n");   
-		out.concat("  <Started>" + rs.getString("Started") + "<Started/>\n"); 
-		out.concat("  <Ends>" + rs.getString("Ends") + "<Ends/>\n"); 	
-		out.concat("  <Seller UserID=\"" + bidrs.getString("User.UserId") + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
-		out.concat("  <Description>" + rs.getString("Description") + "</Description>\n");
+   	    out.append("  </Bids>\n");
+	    out.append("  <Location>" + rs.getString("Location") + "<Location/>\n");	
+		out.append("  <Country>" + rs.getString("Country") + "<Country/>\n");   
+		out.append("  <Started>" + rs.getString("Started") + "<Started/>\n"); 
+		out.append("  <Ends>" + rs.getString("Ends") + "<Ends/>\n"); 	
+		out.append("  <Seller UserID=\"" + rs.getString("User.UserId") + "\" Rating=\"" + rs.getString("Rating") + "\">\n");
+		out.append("  <Description>" + rs.getString("Description") + "</Description>\n");
+		out.append("</Item>\n");
 		
-		return out;
+		return out.toString();
 	}
 	
 	public String echo(String message) {
