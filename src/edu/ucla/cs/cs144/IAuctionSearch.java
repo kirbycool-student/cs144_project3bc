@@ -9,6 +9,8 @@ import org.apache.lucene.queryParser.ParseException;
 import edu.ucla.cs.cs144.SearchConstraint;
 import edu.ucla.cs.cs144.SearchResult;
 
+import java.sql.SQLException;
+
 public interface IAuctionSearch {
 	
 	/**
@@ -42,7 +44,7 @@ public interface IAuctionSearch {
 	 */
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 
 			int numResultsToSkip, int numResultsToReturn) throws CorruptIndexException, IOException,
-      ParseException;
+      ParseException, SQLException;
 	
 	/**
 	 * Rebuilds an Item XML Element (and all of its sub-Elements), for the given

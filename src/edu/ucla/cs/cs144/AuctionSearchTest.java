@@ -32,6 +32,8 @@ public class AuctionSearchTest {
 		
 		SearchConstraint constraint =
 		    new SearchConstraint(FieldName.BuyPrice, "5.99"); 
+//    SearchConstraint constraint = 
+//        new Search Constraint(FieldName.
 		SearchConstraint[] constraints = {constraint};
 		SearchResult[] advancedResults = as.advancedSearch(constraints, 0, 20);
 		System.out.println("Advanced Seacrh");
