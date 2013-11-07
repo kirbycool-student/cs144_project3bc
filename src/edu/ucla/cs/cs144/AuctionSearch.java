@@ -7,13 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Hit;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -53,14 +51,13 @@ public class AuctionSearch implements IAuctionSearch {
 	private IndexSearcher searcher = null;
 	private QueryParser parser = null;
 	
-	@SuppressWarnings({"deprecation", "unchecked"})
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
 			int numResultsToReturn) throws CorruptIndexException, IOException, ParseException {
 		
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
-		searcher = new IndexSearcher(System.getenv("LUCENE_INDEX") + "/index1");
-		parser = new QueryParser("Content", new StandardAnalyzer());
+		searcher = new IndexSearcher("../cs144_project3/null/index1");
+		parser = new QueryParser("content", new StandardAnalyzer());
 	
 		Query q = parser.parse(query);
 		Hits hits = searcher.search(q);
@@ -71,10 +68,8 @@ public class AuctionSearch implements IAuctionSearch {
 		  Document doc = hits.doc(i);
 		  
 		  SearchResult s = new SearchResult();
-		  s.setItemId(doc.get("ItemId"));
-		  s.setName(doc.get("Name"));
-		  
-		  System.out.println(s.getItemId());
+		  s.setItemId(doc.get("itemId"));
+		  s.setName(doc.get("name"));
 		  
 		  results.add(s);
 		}
@@ -201,14 +196,75 @@ public class AuctionSearch implements IAuctionSearch {
 		return r;
 	}
 
-	public String getXMLDataForItemId(String itemId) {
+	public static String formatXMLDate(String indate) {
+		Date out = null;
+		SimpleDateFormat outformat = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+		SimpleDateFormat informat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			out = informat.parse(indate);
+		} catch (java.text.ParseException e) {
+			System.err.println("bad date format");
+			return indate;
+		}
+		return outformat.format(out);
+	}
+    
+	public String getXMLDataForItemId(String itemId) throws SQLException {
 		// TODO: Your code here!
-		return null;
+		StringBuilder out = new StringBuilder();
+		
+		//get the item from db
+		
+		Connection con = DbManager.getConnection(true);
+		
+		Statement selectItem = con.createStatement();
+		Statement selectCat = con.createStatement();
+		Statement selectBid = con.createStatement();
+        ResultSet rs = selectItem.executeQuery("SELECT * from Item join User on Item.Seller=User.UserId where ItemId=" + itemId);
+        ResultSet catrs = selectCat.executeQuery("SELECT Category from ItemCategory WHERE ItemId=" + itemId);
+        ResultSet bidrs = selectBid.executeQuery("SELECT * from Bid join User on Bid.Bidder=User.UserId where ItemId=" + itemId);
+        
+        if( !rs.next() ) {
+        	System.err.println("no results returned");
+        	System.exit(-1);
+        }
+        
+        out.append("<Item ItemId=\"" + rs.getString("ItemId") + "\">\n");
+        out.append("  <Name>" + rs.getString("Name") + "</Name>\n");
+        while( catrs.next() ) {
+        	out.append("    <Category>" + catrs.getString("Category") + "</Category>\n");
+        }
+        out.append("  <Currently>" + rs.getString("Currently") + "</Currently>\n");
+	    out.append("  <Buy_Price>$" + rs.getString("BuyPrice") + "</Buy_Price>\n");
+	    out.append("  <First_Bid>$" + rs.getString("FirstBid") + "</First_Bid>\n");
+   	    out.append("  <Number_of_Bids>" + rs.getString("NumberOfBids") + "</Number_of_Bids>\n");
+   	    out.append("  <Bids>\n");
+   	    while( bidrs.next() ) {
+   	    	out.append("  <Bid>\n");
+   	        out.append("    <Bidder UserID=\"" + bidrs.getString("User.UserId") + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
+   	        out.append("      <Location>" + bidrs.getString("Location") + "</Location>\n" );
+   	        out.append("      <Country>" + bidrs.getString("Country") + "</Country>\n" );
+   	        out.append("    </Bidder>\n");
+   	        out.append("    <Time>" + formatDate( bidrs.getString("Time") )+ "</Time>\n");
+   	        out.append("    <Amount>$" + bidrs.getString("Amount") + "</Amount>\n");
+   	        out.append("  </Bid>\n");
+   	    }
+   	    out.append("  </Bids>\n");
+	    out.append("  <Location>" + rs.getString("Location") + "<Location/>\n");	
+		out.append("  <Country>" + rs.getString("Country") + "<Country/>\n");   
+		out.append("  <Started>" + formatDate( rs.getString("Started") ) + "<Started/>\n"); 
+		out.append("  <Ends>" + formatDate( rs.getString("Ends") ) + "<Ends/>\n"); 	
+		out.append("  <Seller UserID=\"" + rs.getString("User.UserId") + "\" Rating=\"" + rs.getString("Rating") + "\">\n");
+		out.append("  <Description>" + rs.getString("Description") + "</Description>\n");
+		out.append("</Item>\n");
+		
+		return out.toString();
 	}
 	
 	public String echo(String message) {
 		return message;
 	}
+	
 
   private static String formatDate(String indate)
   {
