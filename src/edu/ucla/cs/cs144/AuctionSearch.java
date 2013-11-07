@@ -102,7 +102,7 @@ public class AuctionSearch implements IAuctionSearch {
 		return new SearchResult[0];
 	}
 
-	public static String formatDate(String indate) {
+	public static String formatXMLDate(String indate) {
 		Date out = null;
 		SimpleDateFormat outformat = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
 		SimpleDateFormat informat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -135,7 +135,7 @@ public class AuctionSearch implements IAuctionSearch {
         	System.exit(-1);
         }
         
-        out.append("<Item>\n");
+        out.append("<Item ItemId=\"" + rs.getString("ItemId") + "\">\n");
         out.append("  <Name>" + rs.getString("Name") + "</Name>\n");
         while( catrs.next() ) {
         	out.append("    <Category>" + catrs.getString("Category") + "</Category>\n");
@@ -151,7 +151,7 @@ public class AuctionSearch implements IAuctionSearch {
    	        out.append("      <Location>" + bidrs.getString("Location") + "</Location>\n" );
    	        out.append("      <Country>" + bidrs.getString("Country") + "</Country>\n" );
    	        out.append("    </Bidder>\n");
-   	        out.append("    <Time>" + formatDate( bidrs.getString("Time") ) + "</Time>\n");
+   	        out.append("    <Time>" + formatDate( bidrs.getString("Time") )+ "</Time>\n");
    	        out.append("    <Amount>$" + bidrs.getString("Amount") + "</Amount>\n");
    	        out.append("  </Bid>\n");
    	    }
