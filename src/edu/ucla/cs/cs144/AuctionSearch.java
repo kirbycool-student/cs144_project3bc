@@ -6,13 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Hit;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -50,7 +48,6 @@ public class AuctionSearch implements IAuctionSearch {
 	private IndexSearcher searcher = null;
 	private QueryParser parser = null;
 	
-	@SuppressWarnings({"deprecation", "unchecked"})
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
 			int numResultsToReturn) throws CorruptIndexException, IOException, ParseException {
 		
@@ -68,10 +65,8 @@ public class AuctionSearch implements IAuctionSearch {
 		  Document doc = hits.doc(i);
 		  
 		  SearchResult s = new SearchResult();
-		  s.setItemId(doc.get("ItemId"));
-		  s.setName(doc.get("Name"));
-		  
-		  System.out.println(s.getItemId());
+		  s.setItemId(doc.get("itemId"));
+		  s.setName(doc.get("name"));
 		  
 		  results.add(s);
 		}
@@ -82,9 +77,10 @@ public class AuctionSearch implements IAuctionSearch {
 	}
 
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 
-			int numResultsToSkip, int numResultsToReturn) {
-    searcher = new IndexSearcher("LUCENE_INDEX");
-    for(int i = 0; i < constraints.length; i++)
+			int numResultsToSkip, int numResultsToReturn) throws CorruptIndexException, IOException,
+      ParseException {
+    //searcher = new IndexSearcher(System.getenv("$LUCENE_INDEX"));
+/*    for(int i = 0; i < constraints.length; i++)
     {
       if(constraints[i].fieldName.equals("ItemName"))
       {
@@ -101,6 +97,7 @@ public class AuctionSearch implements IAuctionSearch {
 
       }
     }
+*/
 		// TODO: Your code here!
 		return new SearchResult[0];
 	}
@@ -113,5 +110,6 @@ public class AuctionSearch implements IAuctionSearch {
 	public String echo(String message) {
 		return message;
 	}
+	
 
 }
