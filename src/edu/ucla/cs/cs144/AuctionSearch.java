@@ -151,7 +151,7 @@ public class AuctionSearch implements IAuctionSearch {
    	        out.append("      <Location>" + bidrs.getString("Location") + "</Location>\n" );
    	        out.append("      <Country>" + bidrs.getString("Country") + "</Country>\n" );
    	        out.append("    </Bidder>\n");
-   	        out.append("    <Time>" + bidrs.getString("Time") + "</Time>\n");
+   	        out.append("    <Time>" + formatDate( bidrs.getString("Time") ) + "</Time>\n");
    	        out.append("    <Amount>$" + bidrs.getString("Amount") + "</Amount>\n");
    	        out.append("  </Bid>\n");
    	    }
