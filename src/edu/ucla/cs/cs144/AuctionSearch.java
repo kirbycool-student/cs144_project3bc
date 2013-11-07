@@ -89,15 +89,15 @@ public class AuctionSearch implements IAuctionSearch {
     {
       if(constraints[i].getFieldName().equals("ItemName"))
       {
-        parser = new QueryParser("Name", new StandardAnalyzer());
+        parser = new QueryParser("name", new StandardAnalyzer());
       }
       else if(constraints[i].getFieldName().equals("Category"))
       {
-        parser = new QueryParser("Category", new StandardAnalyzer());
+        parser = new QueryParser("category", new StandardAnalyzer());
       }
       else if(constraints[i].getFieldName().equals("Description"))
       {
-        parser = new QueryParser("Description", new StandardAnalyzer());
+        parser = new QueryParser("description", new StandardAnalyzer());
       }
 
       if(parser != null)
@@ -110,7 +110,7 @@ public class AuctionSearch implements IAuctionSearch {
           for(int j = 0; j < hits.length(); j++)
           {
             Document doc = hits.doc(j);
-            results.put(doc.get("ItemId"), doc.get("Name"));
+            results.put(doc.get("itemId"), doc.get("name"));
           }
         }
         else
@@ -120,9 +120,9 @@ public class AuctionSearch implements IAuctionSearch {
           for(int j = 0; j < hits.length(); j++)
           {
             Document doc = hits.doc(j);
-            if(results.containsKey(doc.get("ItemId")))
+            if(results.containsKey(doc.get("itemId")))
             {
-              temp.put(doc.get("ItemId"), doc.get("Name"));
+              temp.put(doc.get("itemId"), doc.get("name"));
             }
           }
           results = temp;
@@ -138,7 +138,7 @@ public class AuctionSearch implements IAuctionSearch {
     {
       if(constraints[i].getFieldName().equals("SellerId"))
       {
-        stmt = con.prepareStatement("SELECT ItemId, Name FROM Item WHERE Seller=" + constraints[i].getValue());
+        stmt = con.prepareStatement("SELECT ItemId, Name FROM Item WHERE Seller=\"" + constraints[i].getValue() + "\"");
       }
       else if(constraints[i].getFieldName().equals("BuyPrice"))
       {
