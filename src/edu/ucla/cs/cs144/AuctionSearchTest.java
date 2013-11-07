@@ -1,6 +1,7 @@
 package edu.ucla.cs.cs144;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,7 +14,7 @@ import edu.ucla.cs.cs144.SearchConstraint;
 import edu.ucla.cs.cs144.FieldName;
 
 public class AuctionSearchTest {
-	public static void main(String[] args1) throws CorruptIndexException, IOException, ParseException
+	public static void main(String[] args1) throws CorruptIndexException, IOException, ParseException, SQLException
 	{
 		AuctionSearch as = new AuctionSearch();
 

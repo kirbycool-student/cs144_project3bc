@@ -6,11 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Hit;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -48,13 +50,19 @@ public class AuctionSearch implements IAuctionSearch {
 	private IndexSearcher searcher = null;
 	private QueryParser parser = null;
 	
+	@SuppressWarnings({"deprecation", "unchecked"})
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
 			int numResultsToReturn) throws CorruptIndexException, IOException, ParseException {
 		
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
+<<<<<<< HEAD
 		searcher = new IndexSearcher("../cs144_project3/null/index1");
 		parser = new QueryParser("content", new StandardAnalyzer());
+=======
+		searcher = new IndexSearcher(System.getenv("LUCENE_INDEX") + "/index1");
+		parser = new QueryParser("Content", new StandardAnalyzer());
+>>>>>>> 7e8edba833cab403106b90932df9e99380f42746
 	
 		Query q = parser.parse(query);
 		Hits hits = searcher.search(q);
@@ -65,8 +73,10 @@ public class AuctionSearch implements IAuctionSearch {
 		  Document doc = hits.doc(i);
 		  
 		  SearchResult s = new SearchResult();
-		  s.setItemId(doc.get("itemId"));
-		  s.setName(doc.get("name"));
+		  s.setItemId(doc.get("ItemId"));
+		  s.setName(doc.get("Name"));
+		  
+		  System.out.println(s.getItemId());
 		  
 		  results.add(s);
 		}
@@ -79,7 +89,7 @@ public class AuctionSearch implements IAuctionSearch {
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 
 			int numResultsToSkip, int numResultsToReturn) throws CorruptIndexException, IOException,
       ParseException {
-    //searcher = new IndexSearcher(System.getenv("$LUCENE_INDEX"));
+    searcher = new IndexSearcher(System.getenv("$LUCENE_INDEX"));
 /*    for(int i = 0; i < constraints.length; i++)
     {
       if(constraints[i].fieldName.equals("ItemName"))
@@ -102,52 +112,9 @@ public class AuctionSearch implements IAuctionSearch {
 		return new SearchResult[0];
 	}
 
-	public String getXMLDataForItemId(String itemId) throws SQLException {
+	public String getXMLDataForItemId(String itemId) {
 		// TODO: Your code here!
-		String out = new String();
-		
-		//get the item from db
-		
-		Connection con = DbManager.getConnection(true);
-		
-		Statement selectItem = con.createStatement();
-        ResultSet rs = selectItem.executeQuery("SELECT * from Item join User on Item.Seller=User.UserId where ItemId=" + itemId);
-        ResultSet catrs = selectItem.executeQuery("SELECT Category from ItemCategory WHERE ItemId=" + itemId);
-        ResultSet bidrs = selectItem.executeQuery("SELECT * from Bid join User on Bid.Bidder=User.UserId where ItemId=" + itemId);
-        
-        if( !rs.next() ) {
-        	System.err.println("no results returned");
-        	System.exit(-1);
-        }
-        
-        out.concat("<Item>\n");
-        out.concat("  <Name>" + rs.getString("Name") + "</Name>\n");
-        while( catrs.next() ) {
-        	out.concat("    <Category>" + catrs.getString("Category") + "</Category>\n");
-        }
-        out.concat("  <Currently>" + rs.getString("Currently") + "</Currently>\n");
-	    out.concat("  <Buy_Price>" + rs.getString("BuyPrice") + "</Buy_Price>\n");
-	    out.concat("  <First_Bid>" + rs.getString("FirstBid") + "</First_Bid>\n");
-   	    out.concat("  <Number_of_Bids>" + rs.getString("NumberOfBids") + "</Number_of_Bids>\n");
-   	    out.concat("  <Bids>\n");
-   	    while( bidrs.next() ) {
-   	    	out.concat("  <Bid>\n");
-   	        out.concat("    <Bidder UserID=\"" + bidrs.getString("User.UserId") + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
-   	        out.concat("      <Location>" + bidrs.getString("Location") + "</Location>\n" );
-   	        out.concat("      <Country>" + bidrs.getString("Country") + "</Country>\n" );
-   	        out.concat("    </Bidder>\n");
-   	        out.concat("    <Time>" + bidrs.getString("Time") + "</Time>\n");
-   	        out.concat("    <Amount>" + bidrs.getString("Amount") + "</Amount>\n");
-   	        out.concat("  </Bid>\n");
-   	    }
-	    out.concat("  <Location>" + rs.getString("Location") + "<Location/>\n");	
-		out.concat("  <Country>" + rs.getString("Country") + "<Country/>\n");   
-		out.concat("  <Started>" + rs.getString("Started") + "<Started/>\n"); 
-		out.concat("  <Ends>" + rs.getString("Ends") + "<Ends/>\n"); 	
-		out.concat("  <Seller UserID=\"" + bidrs.getString("User.UserId") + "\" Rating=\"" + bidrs.getString("Rating") + "\">\n");
-		out.concat("  <Description>" + rs.getString("Description") + "</Description>\n");
-		
-		return out;
+		return null;
 	}
 	
 	public String echo(String message) {

@@ -1,6 +1,7 @@
 package edu.ucla.cs.cs144;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
@@ -51,8 +52,9 @@ public interface IAuctionSearch {
 	 * @return A String of valid XML data (conforming to the original items.dtd)
 	 * containing data about the requested itemId. null is returned when itemId 
 	 * is not valid.
+	 * @throws SQLException 
 	 */
-	public String getXMLDataForItemId(String itemId);
+	public String getXMLDataForItemId(String itemId) throws SQLException;
 	
 	/**
 	 * Simple Web Service to verify your deployment is in working order.
