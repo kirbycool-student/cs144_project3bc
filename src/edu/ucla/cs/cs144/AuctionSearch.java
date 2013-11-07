@@ -56,7 +56,7 @@ public class AuctionSearch implements IAuctionSearch {
 		
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
-		searcher = new IndexSearcher("../cs144_project3/null/index1");
+		searcher = new IndexSearcher(System.getenv("LUCENE_INDEX") + "/index1");
 		parser = new QueryParser("content", new StandardAnalyzer());
 	
 		Query q = parser.parse(query);
@@ -273,7 +273,7 @@ public class AuctionSearch implements IAuctionSearch {
     try {
       Date started = informat.parse(indate);
       return outformat.format(started);
-    } catch(Java.Text.ParseException a) {
+    } catch(java.text.ParseException a) {
       System.err.println("Caught IOException: " + a.getMessage());
     }
     System.exit(1);
