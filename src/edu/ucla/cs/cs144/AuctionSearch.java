@@ -62,9 +62,8 @@ public class AuctionSearch implements IAuctionSearch {
 		Query q = parser.parse(query);
 		Hits hits = searcher.search(q);
 		
-		System.out.println("total items: " + hits.length());
-		
-		for(int i = 0; i < hits.length(); i++) {
+		int stopIndex = numResultsToReturn == 0 ? hits.length() : numResultsToReturn + numResultsToSkip;	
+		for(int i = numResultsToSkip; i < hits.length() && i < stopIndex; i++) {
 		  Document doc = hits.doc(i);
 		  
 		  SearchResult s = new SearchResult();
