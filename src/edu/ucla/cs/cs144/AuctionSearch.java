@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
@@ -52,7 +51,7 @@ public class AuctionSearch implements IAuctionSearch {
 	private QueryParser parser = null;
 	
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
-			int numResultsToReturn) throws CorruptIndexException, IOException, ParseException {
+			int numResultsToReturn) throws IOException, ParseException {
 		
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
@@ -79,7 +78,7 @@ public class AuctionSearch implements IAuctionSearch {
 	}
 
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 
-			int numResultsToSkip, int numResultsToReturn) throws CorruptIndexException, IOException,
+			int numResultsToSkip, int numResultsToReturn) throws IOException,
       ParseException, SQLException {
     parser = null;
     searcher = new IndexSearcher(System.getenv("LUCENE_INDEX") + "/index1");

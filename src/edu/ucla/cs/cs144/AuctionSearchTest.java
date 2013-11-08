@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 
 import edu.ucla.cs.cs144.AuctionSearch;
@@ -14,7 +13,7 @@ import edu.ucla.cs.cs144.SearchConstraint;
 import edu.ucla.cs.cs144.FieldName;
 
 public class AuctionSearchTest {
-	public static void main(String[] args1) throws CorruptIndexException, IOException, ParseException, SQLException
+	public static void main(String[] args1) throws IOException, ParseException, SQLException
 	{
 		AuctionSearch as = new AuctionSearch();
 

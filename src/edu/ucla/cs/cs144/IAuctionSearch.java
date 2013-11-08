@@ -3,7 +3,6 @@ package edu.ucla.cs.cs144;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 
 import edu.ucla.cs.cs144.SearchConstraint;
@@ -24,11 +23,10 @@ public interface IAuctionSearch {
 	 * representing the results of the query after skipping numResultsToSkip
 	 * SearchResult objects.
 	 * @throws IOException 
-	 * @throws CorruptIndexException 
 	 * @throws ParseException 
 	 */
 	public SearchResult[] basicSearch(String query, int numResultsToSkip, 
-			int numResultsToReturn) throws CorruptIndexException, IOException, ParseException;
+			int numResultsToReturn) throws IOException, ParseException;
 	
 	/**
 	 * Performs a search over the AND of all of the SearchConstraints. 
@@ -43,7 +41,7 @@ public interface IAuctionSearch {
 	 * SearchResult objects.
 	 */
 	public SearchResult[] advancedSearch(SearchConstraint[] constraints, 
-			int numResultsToSkip, int numResultsToReturn) throws CorruptIndexException, IOException,
+			int numResultsToSkip, int numResultsToReturn) throws IOException,
       ParseException, SQLException;
 	
 	/**
