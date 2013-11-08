@@ -184,12 +184,38 @@ public class AuctionSearch implements IAuctionSearch {
       }
     }
 
-    SearchResult[] r = new SearchResult[results.size()];
+    if(results.size() <= numResultsToSkip)
+    {
+      return new SearchResult[0];
+    }
+
+    if(numResultsToReturn == 0 || numResultsToReturn > results.size())
+    {
+      numResultsToReturn = results.size();
+    }
+
+    SearchResult[] r;
+    if(results.size() < numResultsToReturn+numResultsToSkip)
+    {
+      r = new SearchResult[results.size() - numResultsToSkip];
+    }
+    else
+    {
+      r = new SearchResult[numResultsToReturn];
+    }
+
     int i = 0;
     for(Map.Entry<String, String> entry : results.entrySet())
     {
-      SearchResult temp = new SearchResult(entry.getKey(), entry.getValue());
-      r[i] = temp;
+      if(numResultsToReturn + numResultsToSkip <= i)
+      {
+        break;
+      }
+      if(numResultsToSkip <= i)
+      {
+        SearchResult temp = new SearchResult(entry.getKey(), entry.getValue());
+        r[i-numResultsToSkip] = temp;
+      }
       i++;
     }
     
