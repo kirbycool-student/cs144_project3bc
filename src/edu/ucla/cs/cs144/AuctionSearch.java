@@ -266,6 +266,14 @@ public class AuctionSearch implements IAuctionSearch {
 		out.append("  <Seller UserID=\"" + escapeXML(rs.getString("User.UserId")) + "\" Rating=\"" + rs.getString("Rating") + "\">\n");
 		out.append("  <Description>" + escapeXML(rs.getString("Description")) + "</Description>\n");
 		out.append("</Item>\n");
+	
+		
+		selectItem.close();
+		selectCat.close();
+		selectItem.close();
+		rs.close();
+		catrs.close();
+		bidrs.close();
 		
 		return out.toString();
 	}
