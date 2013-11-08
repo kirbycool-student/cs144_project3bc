@@ -62,9 +62,8 @@ public class AuctionSearch implements IAuctionSearch {
 		Query q = parser.parse(query);
 		Hits hits = searcher.search(q);
 		
-		System.out.println("total items: " + hits.length());
-		
-		for(int i = 0; i < hits.length(); i++) {
+		int stopIndex = numResultsToReturn == 0 ? hits.length() : numResultsToReturn + numResultsToSkip;	
+		for(int i = numResultsToSkip; i < hits.length() && i < stopIndex; i++) {
 		  Document doc = hits.doc(i);
 		  
 		  SearchResult s = new SearchResult();
@@ -293,6 +292,14 @@ public class AuctionSearch implements IAuctionSearch {
 		out.append("  <Seller UserID=\"" + escapeXML(rs.getString("User.UserId")) + "\" Rating=\"" + rs.getString("Rating") + "\">\n");
 		out.append("  <Description>" + escapeXML(rs.getString("Description")) + "</Description>\n");
 		out.append("</Item>\n");
+	
+		
+		selectItem.close();
+		selectCat.close();
+		selectItem.close();
+		rs.close();
+		catrs.close();
+		bidrs.close();
 		
 		return out.toString();
 	}
