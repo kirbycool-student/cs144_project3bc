@@ -220,7 +220,7 @@ public class AuctionSearch implements IAuctionSearch {
 		return r;
 	}
 
-	private static String formatXMLDate(String indate) {
+	private String formatXMLDate(String indate) {
 		Date out = null;
 		SimpleDateFormat outformat = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
 		SimpleDateFormat informat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -233,7 +233,7 @@ public class AuctionSearch implements IAuctionSearch {
 		return outformat.format(out);
 	}
 	
-	private static String escapeXML( String s ) {
+	private String escapeXML( String s ) {
 		s = s.replace("&", "&amp;");
 		s = s.replace("\"", "&quot;");
 		s = s.replace("\'", "&apos;");
