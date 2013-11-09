@@ -178,6 +178,7 @@ public class AuctionSearch implements IAuctionSearch {
           }
           results = temp;
         }
+        stmt.close();
         stmt = null;
       }
     }

@@ -30,10 +30,10 @@ public class AuctionSearchTest {
 		}
 		
 		SearchConstraint[] constraints = new SearchConstraint[2];
-		constraints[0] = new SearchConstraint(FieldName.ItemName, "Precious Moments"); 
+		constraints[0] = new SearchConstraint(FieldName.EndTime, "Dec-15-01 18:40:36"); 
 		constraints[1] = new SearchConstraint(FieldName.SellerId, "waltera317a"); 
 //		constraints[0] = new SearchConstraint(FieldName.Category, "superman"); 
-		SearchResult[] advancedResults = as.advancedSearch(constraints, 1, 3);
+		SearchResult[] advancedResults = as.advancedSearch(constraints, 0, 0);
 		System.out.println("Advanced Seacrh");
 		System.out.println("Received " + advancedResults.length + " results");
 		for(SearchResult result : advancedResults) {
